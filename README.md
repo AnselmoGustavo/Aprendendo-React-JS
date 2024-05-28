@@ -1,1 +1,1 @@
-Repositório utilizado para estudos de React JS
+Repositório utilizado para estudos de React JS.
