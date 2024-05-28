@@ -1,0 +1,202 @@
+Principal maneira de criar uma class em react é className. A palavra class é reservada para o javaScript
+
+Componentes:
+Semre que criar um componente com uma função, deve-se colocar o export default (nome do componente/função)
+Para importar um componente, deve ter o import no app.js: import (nome do import) from (localização)
+E para utilizar o componente, ele deve ficar dentro da div e entre <(componente)/>
+
+Props:
+function SayMyName(props){}
+Ao colocar o props ali, vc passa uma propriedade que será utilizada na função, podendo colocar mais de uma props, e na hora de usar, é só chamar o componente e colocar o nome da props=(o que você quer que ela receba): <SayMyName nome='Gustavo'/>
+
+function Pessoa(props){
+    return (
+        <div>
+            <img src={props.foto} alt={props.nome}/>
+            <h2>Nome: {props.nome}</h2>
+            <p>Idade: {props.idade}</p>
+            <p>Profissão: {props.profissao}</p>
+        </div>
+    )
+}
+
+Mas podemos fazer sem ter que ficar escrevendo props o tempo todo:
+function Pessoa({nome, idade, profissao, foto}){
+    return (
+        <div>
+            <img src={foto} alt={nome}/>
+            <h2>Nome: {nome}</h2>
+            <p>Idade: {idade}</p>
+            <p>Profissão: {profissao}</p>
+        </div>
+    )
+}
+tudo que estiver dentro das chaves no parênteses da função será transformado em variáveis.
+Podemos também definir tipos para props, serve para validação.
+Podemos colocar também um valor padrão para caso o valor atual n seja válido, ele mandar um padrão
+Propriedades que são números, nós passamos com {}: <Item marca="Ferrari" ano={1985}/>
+Para o protypes funcionar, devemos importá-lo primeiro: import PropTypes from 'prop-types'
+E colocar em qualquer lugar antes do export os tipos delas, com o nome do arquivo.propTypes:
+Item.propTypes={
+    marca: PropTypes.string.isRequired,
+    ano: PropTypes.string.isRequired,
+    
+}
+E para o default a mesma coisa:
+Item.defaultProps={
+    marca:'Fatlou a marca',
+    ano:'0',
+}
+
+
+Usando CSS no react:
+Componente.module.css
+padding: espaçamento no corpo do projeto
+background-color: muda toda a cor do fundo do site
+Crie seu css no Componente.module.css, e dentro dele faça o css normal. Dai pra fazer funcionar, vá no seu componente que quer usar, importe com import styles from './Frase.module.css', dai é só criar a div e os parágrafos ou o que for com o className={styles.(nome)}
+
+Reacts Fragments:
+Permite a criação de um componente sem elemento pai (sem uma div).
+Simplifica o código, sintaxe é <> e </>
+function List(){
+    return(
+        <div>
+            <>
+                <h1>Minha Lista</h1>
+                <ul>
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                </ul>
+            </>
+        </div>
+    )
+}
+
+Funções como props:
+funções também podem ser passadas como propriedas.
+
+
+Renderização condicional:
+Conteúdos mostrados a partir de if else.
+Tags envolvidas em {};
+Posso usar o useState para salvar os dados digitados em uma constante e utilizá-lo dps
+import { useState } from "react";
+
+function Condicional(){
+
+    const [email, setEmail]=useState()
+    const [userEmail, setUserEmail]=useState()
+
+    function enviarEmail(e){
+        e.preventDefault()
+        console.log(`Enviando ${email}`)
+    }
+
+    return(
+        <div>
+            <h2>Cadastre o seu e-mail:</h2>
+            <form>
+                <input type="email" placeholder="Digite o seu e-mail..." onChange={(e)=>setEmail(e.target.value)}/>
+                <button onClick={enviarEmail}>
+                    Enviar e-mail
+                </button>
+		{userEmail && (
+                    <div>
+                        O e-mail do usuário é: {userEmail}
+                    </div>
+                )} 
+            </form>
+        </div>
+    )
+}
+
+export default Condicional
+
+{userEmail && (
+                    <div>
+                        O e-mail do usuário é: {userEmail}
+                    </div>
+                )} 
+Essa parte funciona como um if: se o userEmail for preenchido, faça: <div>...</div>
+o && nesse caso funciona como "faça"
+
+
+Renderização de listas:
+Precisamos criar um array inicialmente, e utilizar a função map para percorrer cada um dos itens do array.
+function OutraLista({itens}){
+
+    return(
+        <>
+            <h3>Lista de coisas boas:</h3>
+            {itens.length>0 ? (
+                itens.map((item, index)=> (
+                    <p key={index}>{item}</p>
+                ))):(
+                    <p>Não há itens na lista</p>
+                )
+            }
+        </>
+    )
+}
+
+export default OutraLista
+
+Nesse caso, criamos um componente para gerar uma lista na tela percorrendo uma lista no Apps.js
+Utilizamos um if else, reprensetado pelo {itens.length>0?()} que vai executar o itens.map, percorrendo o array e para mostrá-los na tela, e um else (:()) para caso a função seja chamada e não existam itens no array que foi passado no props, ou não seja passado nenhum array no props
+
+
+State Lift:
+Técnica utilizada para compartilhar o state.
+A ideia é colocar o state no pai, e utilizá-lo a partir dali
+function App() {
+
+  const[nome,setNome]=useState()
+
+  return (
+    <div className="App">
+      <h1>State Lift</h1>
+      <SeuNome setNome={setNome}/>
+      <Saudacao nome={nome}/>
+    </div>
+  )
+}
+
+sintaxe do if else {algo ? (o que for fazer) : (o que for fazer no else, o : representa o else)}
+function Saudacao({nome}){
+
+    function gerarSaudacao(algumNome){
+        return `Olá, ${algumNome}. Tudo bem?`
+    }
+    return(
+        <>
+         {nome ?(
+            <p>{gerarSaudacao(nome)}</p>
+         ):(
+            <p>Ainda não temos um nome</p>
+         )}
+        </>
+
+    )
+}
+
+export default Saudacao
+
+
+React Router:
+Um pacote para mudança de URLs da aplicação;
+Acessar outras views sem recarregar a página;
+Troca só uma parte do layout da aplicação;
+Precisa mudar como o App é estruturado
+Usar Routes ao invés de Switch
+<Routes>
+      <Route exact path="/"  element={<Home/>}/>
+      <Route path="/empresa"  element={<Empresa/>}/>
+      <Route path="/contato"  element={<Contato/>}/>
+    </Routes>
+
+
+
+React Icons:
+Pacote externo de íones;
+Adicionar ao projeto através do npm;
+Sintaxe parecida com componentes;
